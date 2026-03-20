@@ -1,20 +1,58 @@
 package com.pacman.beans;
 
 public class Joueur {
-    private Long id;
+    private int id;
     private String pseudo;
     private String motDePasse;
-    private int pacgommes;
-    private int meilleurScore;
+    private int scoreFantome;
+    private int scorePacman;
+    private int idCosmetiqueActif;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public String getPseudo() { return pseudo; }
-    public void setPseudo(String pseudo) { this.pseudo = pseudo; }
-    public String getMotDePasse() { return motDePasse; }
-    public void setMotDePasse(String motDePasse) { this.motDePasse = motDePasse; }
-    public int getPacgommes() { return pacgommes; }
-    public void setPacgommes(int pacgommes) { this.pacgommes = pacgommes; }
-    public int getMeilleurScore() { return meilleurScore; }
-    public void setMeilleurScore(int meilleurScore) { this.meilleurScore = meilleurScore; }
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getPseudo() {
+        return pseudo;
+    }
+
+    public void setPseudo(String pseudo) {
+        this.pseudo = pseudo;
+    }
+
+    public String getMotDePasse() {
+        return motDePasse;
+    }
+
+    public void setMotDePasse(String motDePasse) {
+        this.motDePasse = motDePasse;
+    }
+
+    public int getScoreFantome() {
+        return scoreFantome;
+    }
+
+    public void setScoreFantome(int scoreFantome) {
+        this.scoreFantome = scoreFantome;
+    }
+
+    public int getScorePacman() {
+        return scorePacman;
+    }
+
+    public void setScorePacman(int scorePacman) {
+        this.scorePacman = scorePacman;
+    }
+
+    public int getIdCosmetiqueActif() {
+        return idCosmetiqueActif;
+    }
+
+    public void setIdCosmetiqueActif(int idCosmetiqueActif) {
+        this.idCosmetiqueActif = idCosmetiqueActif;
+    }
 }

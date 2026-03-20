@@ -6,5 +6,10 @@ import com.pacman.beans.Joueur;
 public interface JoueurDao {
     void creer(Joueur joueur) throws DAOException;
     Joueur trouver(String pseudo) throws DAOException;
-    List<Joueur> getMeilleursScores() throws DAOException;
+    List<Joueur> listerMeilleursScores() throws DAOException;
+    
+    void ajouterCosmetique(int idJoueur, int idCosmetique) throws DAOException;
+    void equiperCosmetique(int idJoueur, int idCosmetique) throws DAOException;
+    
+    void mettreAJourScores(int idJoueur, int nouveauScorePacman, int nouveauScoreFantome) throws DAOException;
 }

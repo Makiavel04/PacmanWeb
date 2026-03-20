@@ -39,5 +39,13 @@
         <servlet-name>DeconnexionServlet</servlet-name>
         <url-pattern>/deconnexion</url-pattern>
     </servlet-mapping>
+<servlet>
+        <servlet-name>CosmetiqueServlet</servlet-name>
+        <servlet-class>com.pacman.servlets.CosmetiqueServlet</servlet-class>
+    </servlet>
 
+    <servlet-mapping>
+        <servlet-name>CosmetiqueServlet</servlet-name>
+        <url-pattern>/cosmetique</url-pattern>
+    </servlet-mapping>
 </web-app>

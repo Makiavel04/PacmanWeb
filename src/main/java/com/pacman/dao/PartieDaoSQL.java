@@ -21,6 +21,7 @@ public class PartieDaoSQL implements PartieDao {
         String sqlPartie = "INSERT INTO partie (score_pacmans, score_fantomes, vainqueur) VALUES (?, ?, ?)";
         String sqlLiaison = "INSERT INTO joue_partie (id_joueur, id_partie) VALUES (?, ?)";
 
+        
         try (Connection connexion = daoFactory.getConnection();
              PreparedStatement psPartie = connexion.prepareStatement(sqlPartie, Statement.RETURN_GENERATED_KEYS)) {
             

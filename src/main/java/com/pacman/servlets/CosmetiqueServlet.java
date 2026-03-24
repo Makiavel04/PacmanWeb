@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import java.util.List;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,15 +13,16 @@ import javax.servlet.http.HttpSession;
 import com.pacman.beans.*;
 import com.pacman.dao.*;
 
+@WebServlet("/cosmetique")
 public class CosmetiqueServlet extends HttpServlet {
+	private static final String CONFIG_DAO_FACTORY = "daofactory";
 	public static final String VUE = "/WEB-INF/cosmetique.jsp";
     private JoueurDao joueurDao;
     private CosmetiqueDao cosmetiqueDao;
 
     public void init() throws ServletException {
-        DAOFactory mysqlFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
-        this.joueurDao = mysqlFactory.getJoueurDao();
-        this.cosmetiqueDao = mysqlFactory.getCosmetiqueDao();
+        this.joueurDao = ( (DAOFactory) getServletContext().getAttribute( CONFIG_DAO_FACTORY ) ).getJoueurDao();
+        this.cosmetiqueDao = ( (DAOFactory) getServletContext().getAttribute( CONFIG_DAO_FACTORY ) ).getCosmetiqueDao();
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

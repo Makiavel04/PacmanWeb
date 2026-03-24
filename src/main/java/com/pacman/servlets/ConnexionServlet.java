@@ -2,6 +2,7 @@ package com.pacman.servlets;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,37 +11,45 @@ import javax.servlet.http.HttpSession;
 import com.pacman.beans.Joueur;
 import com.pacman.dao.DAOFactory;
 import com.pacman.dao.JoueurDao;
+import com.pacman.metier.ConnexionForm;
 
+@WebServlet("/connexion")
 public class ConnexionServlet extends HttpServlet {
+	private static final String CONFIG_DAO_FACTORY = "daofactory";
 	public static final String VUE = "/WEB-INF/connexion.jsp";
+	public static final String ATTR_JOUEUR_SESSION = "joueur_session";
+	public static final String ATTR_JOUEUR= "joueur";
+	public static final String ATTR_FORM = "form";
 	private JoueurDao joueurDao;
+	
     public void init() throws ServletException {
-        DAOFactory mysqlFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
-        this.joueurDao = mysqlFactory.getJoueurDao();
+        this.joueurDao = ( (DAOFactory) getServletContext().getAttribute( CONFIG_DAO_FACTORY ) ).getJoueurDao();
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        this.getServletContext().getRequestDispatcher(VUE).forward(request, response);
+        HttpSession session = request.getSession();
+        if(session.getAttribute(ATTR_JOUEUR_SESSION) != null) {
+        	response.sendRedirect(request.getContextPath() + "/menu");
+        }else {
+        	this.getServletContext().getRequestDispatcher(VUE).forward(request, response);
+        }
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String pseudo = request.getParameter("pseudo");
-        String motdepasse = request.getParameter("motdepasse");
-
-        try {
-            Joueur joueur = joueurDao.trouver(pseudo);
-            
-            if (joueur != null && joueur.getMotDePasse().equals(motdepasse)) {
-                HttpSession session = request.getSession();
-                session.setAttribute("sessionJoueur", joueur);
-                response.sendRedirect(request.getContextPath() + "/menu");
-            } else {
-                request.setAttribute("erreurConnexion", "Pseudo ou mot de passe incorrect.");
-                this.getServletContext().getRequestDispatcher(VUE).forward(request, response);
-            }
-        } catch (Exception e) {
-            request.setAttribute("erreurConnexion", "Erreur de base de données.");
-            this.getServletContext().getRequestDispatcher(VUE).forward(request, response);
+        ConnexionForm form_connexion = new ConnexionForm(this.joueurDao);
+        Joueur joueur = form_connexion.connecterJoueur(request);
+        
+        HttpSession session = request.getSession();
+        if(form_connexion.getErreurs().isEmpty() && joueur!=null) {//Si pas d'erreur dans le formulaire de connexion et qu'on a un joueur en base
+            session.setAttribute(ATTR_JOUEUR_SESSION, joueur);
+            response.sendRedirect(request.getContextPath() + "/menu");
+        }else {
+        	session.setAttribute(ATTR_JOUEUR_SESSION, null);
+	        request.setAttribute(ATTR_JOUEUR, joueur);
+	        request.setAttribute(ATTR_FORM, form_connexion);
+	        this.getServletContext().getRequestDispatcher(VUE).forward(request, response);
         }
+        
+        
     }
 }

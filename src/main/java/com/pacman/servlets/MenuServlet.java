@@ -3,6 +3,7 @@ package com.pacman.servlets;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,24 +13,26 @@ import com.pacman.beans.Joueur;
 import com.pacman.dao.DAOFactory;
 import com.pacman.dao.JoueurDao;
 
+@WebServlet("/menu")
 public class MenuServlet extends HttpServlet {
+	private static final String CONFIG_DAO_FACTORY = "daofactory";
+	public static final String ATTR_JOUEUR_SESSION = "joueur_session";
 	public static final String VUE = "/WEB-INF/menu.jsp";
     private JoueurDao joueurDao;
 
     public void init() throws ServletException {
-        DAOFactory mysqlFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
-        this.joueurDao = mysqlFactory.getJoueurDao();
+        this.joueurDao = ( (DAOFactory) getServletContext().getAttribute( CONFIG_DAO_FACTORY ) ).getJoueurDao();
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         
-        if (session.getAttribute("sessionJoueur") == null) {
+        if (session.getAttribute(ATTR_JOUEUR_SESSION) == null) {
             response.sendRedirect(request.getContextPath() + "/connexion");
             return;
         }
 
-        try {
+        try {//Mettre un objet metier Menu au quel on passe le dao et qui fait la recherche avec un map comme connexion et inscription
             List<Joueur> leaderboard = joueurDao.listerMeilleursScores();
             request.setAttribute("scores", leaderboard);
         } catch (Exception e) {

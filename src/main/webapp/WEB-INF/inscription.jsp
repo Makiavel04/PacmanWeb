@@ -1,4 +1,5 @@
 <%@ page pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,7 +11,7 @@
         input[type="text"], input[type="password"] { margin: 10px 0; padding: 10px; width: 90%; border: 2px solid #555; border-radius: 5px; background: #000; color: #fff; font-family: 'Courier New';}
         input[type="submit"] { background: #00FF00; color: #000; font-weight: bold; cursor: pointer; padding: 10px; width: 95%; border: none; border-radius: 5px; margin-top: 15px; font-size: 16px; text-transform: uppercase;}
         input[type="submit"]:hover { background: #00CC00; transform: scale(1.02); }
-        .erreur { color: #FF5555; font-weight: bold; margin-bottom: 15px; }
+        .erreur { color: #FF5555; font-weight: bold; margin-bottom: 15px; font-size: 14px;}
         a { color: #FFD700; text-decoration: none; font-size: 14px; display: inline-block; margin-top: 15px;}
         a:hover { text-decoration: underline; }
     </style>
@@ -21,13 +22,12 @@
     <div class="box">
         <h2>NOUVEAU COMPTE</h2>
         
-        <c:if test="${not empty erreurInscription}">
-            <p class="erreur">❌ ${erreurInscription}</p>
-        </c:if>
+        <p class="erreur"> ${form.erreurs['dao']}</p>
         
         <form action="inscription" method="post">
-            <input type="text" name="nouveauPseudo" placeholder="CHOISIR UN PSEUDO" required><br>
-            <input type="password" name="nouveauMdp" placeholder="CHOISIR UN MOT DE PASSE" required><br>
+            <span class="erreur"> ${form.erreurs['pseudo']}</span><input type="text" name="pseudo" placeholder="CHOISIR UN PSEUDO" value="<c:out value="${joueur.pseudo}"/>" required><br>
+            <span class="erreur"> ${form.erreurs['motdepasse']}</span><input type="password" name="motdepasse" placeholder="CHOISIR UN MOT DE PASSE" required><br>
+            <span class="erreur"> ${form.erreurs['confirmation']}</span><input type="password" name="confirmation" placeholder="CHOISIR UN MOT DE PASSE" required><br>
             <input type="submit" value="CRÉER ET JOUER">
         </form>
         

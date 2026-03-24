@@ -1,4 +1,5 @@
 <%@ page pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,24 +11,24 @@
         input[type="text"], input[type="password"] { margin: 10px 0; padding: 10px; width: 90%; border: 2px solid #555; border-radius: 5px; background: #000; color: #fff; font-family: 'Courier New';}
         input[type="submit"] { background: #FFD700; color: #000; font-weight: bold; cursor: pointer; padding: 10px; width: 95%; border: none; border-radius: 5px; margin-top: 15px; font-size: 16px; text-transform: uppercase;}
         input[type="submit"]:hover { background: #FFC107; transform: scale(1.02); }
-        .erreur { color: #FF5555; font-weight: bold; margin-bottom: 15px; }
+        .erreur { color: #FF5555; font-weight: bold; margin-bottom: 15px; font-size: 14px;}
         .btn-inscription { display: inline-block; margin-top: 15px; color: #111; background-color: #00FF00; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;}
         .btn-inscription:hover { background-color: #00CC00; }
     </style>
 </head>
 <body>
-    <h1>🕹️ PAC-MAN ONLINE 🕹️</h1>
+    <h1>🕹️ PAC-MAN ONLINE 🕹️</h1> 
     
     <div class="box">
         <h2>IDENTIFICATION</h2>
         
         <c:if test="${not empty erreurConnexion}">
-            <p class="erreur">❌ ${erreurConnexion}</p>
+            <p class="erreur">${form.erreurs['dao']}</p>
         </c:if>
         
         <form action="connexion" method="post">
-            <input type="text" name="pseudo" placeholder="VOTRE PSEUDO" required><br>
-            <input type="password" name="motdepasse" placeholder="MOT DE PASSE" required><br>
+            <span class="erreur"> ${form.erreurs['pseudo']}</span><input type="text" name="pseudo" placeholder="VOTRE PSEUDO" value="<c:out value="${joueur.pseudo}"/>" required><br>
+            <span class="erreur"> ${form.erreurs['motdepasse']}</span><input type="password" name="motdepasse" placeholder="MOT DE PASSE" required><br>
             <input type="submit" value="START GAME">
         </form>
         

@@ -20,7 +20,7 @@ public class JoueurDaoSQL implements JoueurDao {
     public void creer(Joueur joueur) throws DAOException {
         String sql = "INSERT INTO joueur (pseudo, mot_de_passe, score_fantome, score_pacman) VALUES (?, ?, 0, 0)";
         try (Connection connexion = daoFactory.getConnection();
-             PreparedStatement ps = connexion.prepareStatement(sql)) {
+            PreparedStatement ps = connexion.prepareStatement(sql)) {
             ps.setString(1, joueur.getPseudo());
             ps.setString(2, joueur.getMotDePasse());
             ps.executeUpdate();
@@ -34,7 +34,7 @@ public class JoueurDaoSQL implements JoueurDao {
         Joueur joueur = null;
         String sql = "SELECT * FROM joueur WHERE pseudo = ?";
         try (Connection connexion = daoFactory.getConnection();
-             PreparedStatement ps = connexion.prepareStatement(sql)) {
+            PreparedStatement ps = connexion.prepareStatement(sql)) {
             ps.setString(1, pseudo);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {

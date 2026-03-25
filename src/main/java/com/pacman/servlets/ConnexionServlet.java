@@ -27,12 +27,7 @@ public class ConnexionServlet extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        if(session.getAttribute(ATTR_JOUEUR_SESSION) != null) {
-        	response.sendRedirect(request.getContextPath() + "/menu");
-        }else {
-        	this.getServletContext().getRequestDispatcher(VUE).forward(request, response);
-        }
+    	this.getServletContext().getRequestDispatcher(VUE).forward(request, response);
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -12,7 +12,6 @@ import javax.servlet.http.HttpSession;
 import com.pacman.beans.Joueur;
 import com.pacman.dao.DAOFactory;
 import com.pacman.dao.JoueurDao;
-
 @WebServlet("/menu")
 public class MenuServlet extends HttpServlet {
 	private static final String CONFIG_DAO_FACTORY = "daofactory";
@@ -25,13 +24,6 @@ public class MenuServlet extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        
-        if (session.getAttribute(ATTR_JOUEUR_SESSION) == null) {
-            response.sendRedirect(request.getContextPath() + "/connexion");
-            return;
-        }
-
         try {//Mettre un objet metier Menu au quel on passe le dao et qui fait la recherche avec un map comme connexion et inscription
             List<Joueur> leaderboard = joueurDao.listerMeilleursScores();
             request.setAttribute("scores", leaderboard);

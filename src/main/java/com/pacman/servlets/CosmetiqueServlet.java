@@ -1,7 +1,6 @@
 package com.pacman.servlets;
 
 import java.io.IOException;
-
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,11 +11,14 @@ import javax.servlet.http.HttpSession;
 
 import com.pacman.beans.*;
 import com.pacman.dao.*;
+import com.pacman.metier.MetierCosmetique;
 
 @WebServlet("/cosmetique")
 public class CosmetiqueServlet extends HttpServlet {
-	private static final String CONFIG_DAO_FACTORY = "daofactory";
-	public static final String VUE = "/WEB-INF/cosmetique.jsp";
+    private static final String CONFIG_DAO_FACTORY = "daofactory";
+    public static final String VUE = "/WEB-INF/cosmetique.jsp";
+    public static final String ATTR_JOUEUR_SESSION = "sessionJoueur"; 
+    
     private JoueurDao joueurDao;
     private CosmetiqueDao cosmetiqueDao;
 
@@ -27,58 +29,40 @@ public class CosmetiqueServlet extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
+        Joueur joueurConnecte = (Joueur) session.getAttribute(ATTR_JOUEUR_SESSION);
         
-        if (session.getAttribute("sessionJoueur") == null) {
+        if (joueurConnecte == null) {
             response.sendRedirect(request.getContextPath() + "/connexion");
             return;
         }
-
-        try {
-        	Joueur joueurConnecte = (Joueur) session.getAttribute("sessionJoueur");
-        	int id = joueurConnecte.getId();           
-        	List<Cosmetique> mylistcos = cosmetiqueDao.listerInventaireJoueur(id);
-            List<Cosmetique> listcos = cosmetiqueDao.listerTous();
-            request.setAttribute("mycos", mylistcos);
-            request.setAttribute("cos", listcos);
-        } catch (Exception e) {
-            request.setAttribute("erreur", "Impossible de charger les cosmetique.");
+        MetierCosmetique metier = new MetierCosmetique(joueurDao, cosmetiqueDao);
+        request.setAttribute("mycos", metier.recupererInventaire(joueurConnecte));
+        request.setAttribute("cos", metier.recupererBoutique());
+        if (metier.getErreur() != null) {
+            request.setAttribute("erreur", metier.getErreur());
         }
         
         this.getServletContext().getRequestDispatcher(VUE).forward(request, response);
     }
+
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        Joueur joueurConnecte = (Joueur) session.getAttribute("sessionJoueur");
-
-        // Sécurité anti-triche
+        Joueur joueurConnecte = (Joueur) session.getAttribute(ATTR_JOUEUR_SESSION);
         if (joueurConnecte == null) {
             response.sendRedirect(request.getContextPath() + "/connexion");
             return;
         }
 
-        String action = request.getParameter("action");
-        String idCosmetiqueStr = request.getParameter("idCosmetique");
+        MetierCosmetique metier = new MetierCosmetique(joueurDao, cosmetiqueDao);
+        metier.traiterAction(request, joueurConnecte);
 
-        try {
-            if (action != null && idCosmetiqueStr != null) {
-                int idCosmetique = Integer.parseInt(idCosmetiqueStr);
-                int idJoueur = joueurConnecte.getId();
-
-                if ("acheter".equals(action)) {
-                    joueurDao.ajouterCosmetique(idJoueur, idCosmetique);
-                    
-                } else if ("equiper".equals(action)) {
-                    joueurDao.equiperCosmetique(idJoueur, idCosmetique);
-
-                    joueurConnecte.setIdCosmetiqueActif(idCosmetique);
-                    session.setAttribute("sessionJoueur", joueurConnecte);
-                }
-            }
+        if (metier.getErreur() == null) {
+        	/*zebi*/
+            session.setAttribute(ATTR_JOUEUR_SESSION, joueurConnecte);            
             response.sendRedirect(request.getContextPath() + "/cosmetique");
-            
-        } catch (Exception e) {
-            request.setAttribute("erreur", "Action impossible : Tu possèdes déjà cet objet !");
+        } else {
+            request.setAttribute("erreur", metier.getErreur());
             doGet(request, response); 
         }
     }
-}	
+}

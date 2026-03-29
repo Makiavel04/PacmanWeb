@@ -1,5 +1,5 @@
 <%@ page pageEncoding="UTF-8" %>
-<!DOCTYPE html>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> <!DOCTYPE html>
 <html>
 <head>
     <title>Pac-Man : Boutique & Inventaire</title>
@@ -57,7 +57,7 @@
     <div class="grid-container">
         <c:choose>
             <c:when test="${empty mycos}">
-                <p class="empty-msg">Ton inventaire est vide. Va faire un tour dans la boutique !</p>
+                <p class="empty-msg">Ton inventaire est vide. looser !</p>
             </c:when>
             <c:otherwise>
                 <c:forEach items="${mycos}" var="item">
@@ -78,19 +78,23 @@
 
     <h2>🛒 TOUS LES COSMÉTIQUES</h2>
     <div class="grid-container">
-        <c:forEach items="${cos}" var="boutiqueItem">
-            <div class="card">
-                <div class="color-swatch" style="background-color: ${boutiqueItem.couleur};"></div>
-                <div class="nom-item">${boutiqueItem.nomCosmetique}</div>
-                
-                <form action="cosmetique" method="post">
-                    <input type="hidden" name="action" value="acheter">
-                    <input type="hidden" name="idCosmetique" value="${boutiqueItem.id}">
-                    <button type="submit" class="btn-action btn-acheter">ACHETER</button>
-                </form>
-            </div>
-        </c:forEach>
+        <c:choose>
+            <c:when test="${empty cos}">
+                <p class="empty-msg">La boutique est vide  tkt le iencli va bientot etre viser !</p>
+            </c:when>
+            <c:otherwise>
+                <c:forEach items="${cos}" var="boutiqueItem">
+                    <div class="card">
+                        <div class="color-swatch" style="background-color: ${boutiqueItem.couleur};"></div>
+                        <div class="nom-item">${boutiqueItem.nomCosmetique}</div>
+                        
+                        <form action="cosmetique" method="post">
+                            <input type="hidden" name="action" value="acheter">
+                            <input type="hidden" name="idCosmetique" value="${boutiqueItem.id}">
+                            <button type="submit" class="btn-action btn-acheter">ACHETER</button>
+                        </form>
+                    </div>
+                </c:forEach>
+            </c:otherwise>
+        </c:choose>
     </div>
-
-</body>
-</html>

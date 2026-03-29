@@ -1,5 +1,6 @@
 package com.pacman.dao;
 import com.pacman.beans.Partie;
+
 import java.util.List;
 
 public interface PartieDao {

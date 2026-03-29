@@ -17,7 +17,7 @@ import com.pacman.metier.ConnexionForm;
 public class ConnexionServlet extends HttpServlet {
 	private static final String CONFIG_DAO_FACTORY = "daofactory";
 	public static final String VUE = "/WEB-INF/connexion.jsp";
-	public static final String ATTR_JOUEUR_SESSION = "joueur_session";
+	public static final String ATTR_JOUEUR_SESSION = "sessionJoueur";
 	public static final String ATTR_JOUEUR= "joueur";
 	public static final String ATTR_FORM = "form";
 	private JoueurDao joueurDao;

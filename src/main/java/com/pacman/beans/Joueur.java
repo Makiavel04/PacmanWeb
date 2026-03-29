@@ -1,14 +1,15 @@
 package com.pacman.beans;
 
 public class Joueur {
-    private int id;
+    private Integer id;
     private String pseudo;
     private String motDePasse;
-    private int scoreFantome;
-    private int scorePacman;
-    private int idCosmetiqueActif;
+    private Integer scoreFantome;
+    private Integer scorePacman;
+    private Integer idCosmetiqueActif;
+    private Cosmetique cosmetiqueActif;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -32,7 +33,7 @@ public class Joueur {
         this.motDePasse = motDePasse;
     }
 
-    public int getScoreFantome() {
+    public Integer getScoreFantome() {
         return scoreFantome;
     }
 
@@ -40,7 +41,7 @@ public class Joueur {
         this.scoreFantome = scoreFantome;
     }
 
-    public int getScorePacman() {
+    public Integer getScorePacman() {
         return scorePacman;
     }
 
@@ -48,11 +49,20 @@ public class Joueur {
         this.scorePacman = scorePacman;
     }
 
-    public int getIdCosmetiqueActif() {
+    public Integer getIdCosmetiqueActif() {
         return idCosmetiqueActif;
     }
 
     public void setIdCosmetiqueActif(int idCosmetiqueActif) {
         this.idCosmetiqueActif = idCosmetiqueActif;
     }
+
+	public Cosmetique getCosmetiqueActif() {
+		return cosmetiqueActif;
+	}
+
+	public void setCosmetiqueActif(Cosmetique cosmetiqueActif) {
+		this.cosmetiqueActif = cosmetiqueActif;
+	}
+    
 }

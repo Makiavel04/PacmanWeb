@@ -8,8 +8,9 @@ public interface JoueurDao {
     Joueur trouver(String pseudo) throws DAOException;
     List<Joueur> listerMeilleursScores() throws DAOException;
     
+    
     void ajouterCosmetique(int idJoueur, int idCosmetique) throws DAOException;
     void equiperCosmetique(int idJoueur, int idCosmetique) throws DAOException;
     
-    void mettreAJourScores(int idJoueur, int nouveauScorePacman, int nouveauScoreFantome) throws DAOException;
+    //void updateScore(int idJoueur, int score, String role) throws DAOException;
 }

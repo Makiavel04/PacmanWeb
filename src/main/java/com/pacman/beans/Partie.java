@@ -1,13 +1,18 @@
 package com.pacman.beans;
 
+import java.util.List;
+
 public class Partie {
-    private int id;
-    private int scorePacmans;
-    private int scoreFantomes;
+    private Integer id;
+    private Integer scorePacmans;
+    private Integer scoreFantomes;
     private String vainqueur; // p ou f
+    
+    private List<Integer> idPacmans;
+    private List<Integer> idFantomes;
 
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -15,7 +20,7 @@ public class Partie {
         this.id = id;
     }
 
-    public int getScorePacmans() {
+    public Integer getScorePacmans() {
         return scorePacmans;
     }
 
@@ -23,7 +28,7 @@ public class Partie {
         this.scorePacmans = scorePacmans;
     }
 
-    public int getScoreFantomes() {
+    public Integer getScoreFantomes() {
         return scoreFantomes;
     }
 
@@ -38,4 +43,20 @@ public class Partie {
     public void setVainqueur(String vainqueur) {
         this.vainqueur = vainqueur;
     }
+
+	public List<Integer> getIdFantomes() {
+		return idFantomes;
+	}
+
+	public void setIdFantomes(List<Integer> idFantomes) {
+		this.idFantomes = idFantomes;
+	}
+
+	public List<Integer> getIdPacmans() {
+		return idPacmans;
+	}
+
+	public void setIdPacmans(List<Integer> idPacmans) {
+		this.idPacmans = idPacmans;
+	}
 }

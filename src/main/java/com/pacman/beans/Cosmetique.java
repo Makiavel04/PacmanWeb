@@ -1,12 +1,12 @@
 package com.pacman.beans;
 
 public class Cosmetique {
-    private int id;
+    private Integer id;
     private String nomCosmetique;
     private String couleur;
 
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 

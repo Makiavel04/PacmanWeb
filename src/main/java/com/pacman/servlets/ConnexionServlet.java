@@ -37,7 +37,7 @@ public class ConnexionServlet extends HttpServlet {
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ConnexionForm form_connexion = new ConnexionForm(this.joueurDao);
-        Joueur joueur = form_connexion.connecterJoueur(request);
+        Joueur joueur = form_connexion.connecterJoueurWeb(request);
         
         HttpSession session = request.getSession();
         if(form_connexion.getErreurs().isEmpty() && joueur!=null) {//Si pas d'erreur dans le formulaire de connexion et qu'on a un joueur en base

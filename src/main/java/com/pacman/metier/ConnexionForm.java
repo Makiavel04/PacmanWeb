@@ -5,7 +5,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.pacman.beans.Cosmetique;
 import com.pacman.beans.Joueur;
+import com.pacman.dao.CosmetiqueDao;
 import com.pacman.dao.DAOException;
 import com.pacman.dao.JoueurDao;
 
@@ -18,11 +20,17 @@ public class ConnexionForm {
     private String resultat;
     private Map<String, String> erreurs = new HashMap<String, String>();
     private JoueurDao joueurDao;
+    private CosmetiqueDao cosmetiqueDao;
 
     public ConnexionForm( JoueurDao joueurDao ) {
         this.joueurDao = joueurDao;
     }
 
+    public ConnexionForm( JoueurDao joueurDao, CosmetiqueDao cosmetiqueDao ) {
+        this.joueurDao = joueurDao;
+        this.cosmetiqueDao = cosmetiqueDao;
+    }
+    
     public String getResultat() {
         return resultat;
     }
@@ -31,25 +39,52 @@ public class ConnexionForm {
         return erreurs;
     }
     
-    public Joueur connecterJoueur(HttpServletRequest request) {
+    public Joueur connecterJoueurWeb(HttpServletRequest request) {
     	/* Récupération des champs du formulaire */
     	String pseudo = MetierUtilitaire.getValeurChamp(request, ATTR_PSEUDO);
     	String motDePasse = MetierUtilitaire.getValeurChamp(request, ATTR_MDP);
+    	return this.connecterJoueur(pseudo, motDePasse);
+    }
+    
+    public Joueur connecterJoueurAPI(String pseudo, String motDePasse) {
+    	Joueur j = this.connecterJoueur(pseudo, motDePasse);
+    	//trouver cosmetique et la mettre dans j
+    	if(this.cosmetiqueDao != null) {
+    		try {
+    			Cosmetique c = this.cosmetiqueDao.trouver(j.getIdCosmetiqueActif());
+    			if(c == null) this.setErreur(ATTR_DAO, "Cosmétique introuvable.");
+    			else {
+    				j.setCosmetiqueActif(c);
+    			}
+    		}catch(DAOException e){
+    			this.setErreur(ATTR_DAO, "Problème dans la base, réessayer plus tard.");
+    		}
+    		
+    	}else {
+    		j.setCosmetiqueActif(null);
+    	}
+    	return j;
+    }
+    
+    private Joueur connecterJoueur(String pseudo, String motDePasse) {
     	
     	Joueur joueur = new Joueur();
     	
         try {
         	this.traiterPseudo(pseudo, joueur);
-        	this.traiterMotDePasse(motDePasse, joueur);
         	
         	if(erreurs.isEmpty()) {
         		Joueur jDao = joueurDao.trouver(joueur.getPseudo());
         		if(jDao == null) this.setErreur(ATTR_PSEUDO, "Joueur non existant");
         		else {
-        			this.validationCorrespondance(joueur, jDao);
-            		if(erreurs.isEmpty()) {
-            			joueur = jDao;
-            		}
+        			this.traiterMotDePasse(motDePasse, joueur);//Ne teste la conformité du mot de passe que si le joueur existe
+        			if(erreurs.isEmpty()) {
+        				this.validationCorrespondance(joueur, jDao);
+	            		if(erreurs.isEmpty()) {
+	            			joueur = jDao;
+	            		}
+        			}
+        			
         		}
         	}
         	resultat = this.erreurs.isEmpty() ? "Succès de la connexion." : "Échec de la connexion.";

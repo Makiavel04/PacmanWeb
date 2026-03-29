@@ -18,15 +18,48 @@ public class JoueurDaoSQL implements JoueurDao {
 
     @Override
     public void creer(Joueur joueur) throws DAOException {
-        String sql = "INSERT INTO joueur (pseudo, mot_de_passe, score_fantome, score_pacman) VALUES (?, ?, 0, 0)";
-        try (Connection connexion = daoFactory.getConnection();
-            PreparedStatement ps = connexion.prepareStatement(sql)) {
-            ps.setString(1, joueur.getPseudo());
-            ps.setString(2, joueur.getMotDePasse());
-            ps.executeUpdate();
-        } catch (SQLException e) { 
-            throw new DAOException("Erreur lors de la création du joueur.", e); 
-        }
+    	int id_gen = -1;
+    	Connection connexion = null;
+    	try{
+    		connexion = daoFactory.getConnection();
+    		connexion.setAutoCommit(false);
+    		
+	        String sql_creerj = "INSERT INTO joueur (pseudo, mot_de_passe, score_fantome, score_pacman, id_cosmetique_actif) VALUES (?, ?, 0, 0, 1)";
+	        try (PreparedStatement psJ = connexion.prepareStatement(sql_creerj, java.sql.Statement.RETURN_GENERATED_KEYS)) {
+	        	psJ.setString(1, joueur.getPseudo());
+	        	psJ.setString(2, joueur.getMotDePasse());
+	        	psJ.executeUpdate();
+	            try (ResultSet rs = psJ.getGeneratedKeys()) {
+	                if (rs.next()) {
+	                	id_gen = rs.getInt(1);
+	                }
+	            }
+	        }
+	        
+	        if(id_gen != -1) {
+		        String sql_cosj = "INSERT INTO a_cosmetique (id_joueur, id_cosmetique) VALUES (?, ?)";
+		        try (PreparedStatement psC = connexion.prepareStatement(sql_cosj)) {
+		        	psC.setInt(1, id_gen);
+		        	psC.setInt(2, 1);
+		        	psC.executeUpdate();
+		        }
+		        connexion.commit();
+	        } else {
+	            throw new SQLException("Impossible de récupérer l'ID généré.");
+	        }
+    	} catch (SQLException e) { 
+    		if (connexion != null) { //Si erreur annule tout
+                try { connexion.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
+            }
+    		throw new DAOException("Erreur lors de la création du joueur.", e); 
+	    }finally {
+	        if (connexion != null) {
+	            try { 
+	                connexion.setAutoCommit(true); 
+	                connexion.close(); 
+	            } catch (SQLException e) { e.printStackTrace(); }
+	        }
+	    }
     }
 
     @Override
@@ -100,19 +133,22 @@ public class JoueurDaoSQL implements JoueurDao {
         }
     }
 
-    // NOUVEAU : La méthode pour l'API qui met à jour les scores !
-    @Override
-    public void mettreAJourScores(int idJoueur, int nouveauScorePacman, int nouveauScoreFantome) throws DAOException {
-        // GREATEST() vérifie : "Garde l'ancien record, SAUF SI le nouveau score est plus grand"
-        String sql = "UPDATE joueur SET score_pacman = GREATEST(score_pacman, ?), score_fantome = GREATEST(score_fantome, ?) WHERE id = ?";
-        try (Connection connexion = daoFactory.getConnection();
-             PreparedStatement ps = connexion.prepareStatement(sql)) {
-            ps.setInt(1, nouveauScorePacman);
-            ps.setInt(2, nouveauScoreFantome);
-            ps.setInt(3, idJoueur);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new DAOException("Erreur lors de la mise à jour des scores.", e);
+    public void updateScore(Connection connection, List<Integer> idJoueurs, Integer score, String role) throws DAOException{
+    	if(idJoueurs == null) throw new DAOException("Liste de joueurs à mettre à jour vide");
+    	String sqlUpScore;
+    	if("P".equals(role)) sqlUpScore = "UPDATE joueur SET score_pacman = score_pacman + ? WHERE id = ?";
+    	else if("F".equals(role)) sqlUpScore = "UPDATE joueur SET score_fantome = score_fantome + ? WHERE id = ?";
+    	else throw new DAOException("Rôle inconnu : "+role);
+    	
+    	try(PreparedStatement psScore = connection.prepareStatement(sqlUpScore)){
+    		for (Integer j : idJoueurs) {
+    			psScore.setInt(1, score);
+    			psScore.setInt(2, j);
+    			psScore.addBatch(); // On ajoute la ligne au "lot" sans l'envoyer de suite
+            }
+    		psScore.executeBatch();
+    	}catch (SQLException e) { 
+            throw new DAOException("Erreur lors de la mise à jour du score.", e); 
         }
     }
 }

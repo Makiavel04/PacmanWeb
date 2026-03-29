@@ -7,9 +7,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import com.pacman.beans.Cosmetique;
+import com.pacman.beans.Joueur;
 
 public class CosmetiqueDaoSQL implements CosmetiqueDao {
-    
+    private static String ATTR_ID = "id";
+    private static String ATTR_NOM = "nom_cosmetique";
+    private static String ATTR_COULEUR = "couleur";
     private DAOFactorySQL daoFactory;
 
     public CosmetiqueDaoSQL(DAOFactorySQL daoFactory) {
@@ -31,6 +34,29 @@ public class CosmetiqueDaoSQL implements CosmetiqueDao {
         }
     }
 
+    @Override
+    public Cosmetique trouver(int id) throws DAOException{
+    	Cosmetique cosmetique = null;
+        String sql = "SELECT * FROM cosmetique WHERE id = ?";
+        try (Connection connexion = daoFactory.getConnection();
+        		PreparedStatement ps = connexion.prepareStatement(sql)) {
+                ps.setInt(1, id);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        cosmetique = new Cosmetique();
+                        cosmetique.setId(rs.getInt(ATTR_ID));
+                        cosmetique.setNomCosmetique(ATTR_NOM);
+                        cosmetique.setCouleur(ATTR_COULEUR);
+                    }
+                }
+        } catch (SQLException e) { 
+        	throw new DAOException("Erreur lors de la recherche du joueur.", e); 
+        }
+        
+        return cosmetique;
+
+    }
+    
     @Override
     public List<Cosmetique> listerTous() throws DAOException {
         List<Cosmetique> cosmetiques = new ArrayList<>();

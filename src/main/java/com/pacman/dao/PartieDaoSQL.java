@@ -17,33 +17,80 @@ public class PartieDaoSQL implements PartieDao {
     }
 
     @Override
-    public void enregistrerPartie(int idJoueur, Partie partie) throws DAOException {
+    public Integer enregistrerPartie(Partie partie) throws DAOException {
         String sqlPartie = "INSERT INTO partie (score_pacmans, score_fantomes, vainqueur) VALUES (?, ?, ?)";
-        String sqlLiaison = "INSERT INTO joue_partie (id_joueur, id_partie) VALUES (?, ?)";
+        int idPartie = -1;
+        Connection connection = null;
+        try {
+        	connection = daoFactory.getConnection();
+        	connection.setAutoCommit(false);
+        	
+        	idPartie = this.creerPartie(connection, partie);
+        	
+        	JoueurDaoSQL jDaoSql = (JoueurDaoSQL) this.daoFactory.getJoueurDao();//Nous sommes sur un DAO JDBC donc le cast est sûr
+        	
+        	if(partie.getIdPacmans()!=null) {
+        		this.ajouterJoueurPartie(connection, partie.getIdPacmans(), idPartie, "P");
+        		jDaoSql.updateScore(connection, partie.getIdPacmans(), partie.getScorePacmans(), "P");
+        	}else throw new Exception("Les id pacmans n'existents pas.");
 
-        
-        try (Connection connexion = daoFactory.getConnection();
-             PreparedStatement psPartie = connexion.prepareStatement(sqlPartie, Statement.RETURN_GENERATED_KEYS)) {
-            
-            psPartie.setInt(1, partie.getScorePacmans());
+        	if(partie.getIdFantomes()!=null) {
+        		this.ajouterJoueurPartie(connection, partie.getIdFantomes(), idPartie, "F");
+        		jDaoSql.updateScore(connection, partie.getIdFantomes(), partie.getScoreFantomes(), "F");
+        	}else throw new Exception("Les id fantomes n'existents pas.");
+        	
+        	connection.commit();
+        } catch (Exception e) {
+        	if (connection != null) { //Si erreur annule tout
+                try { connection.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
+            }
+        	idPartie = -1;
+            throw new DAOException("Erreur lors de l'enregistrement de la partie et de la liaison.", e);
+        }finally {
+	        if (connection != null) {
+	            try { 
+	            	connection.setAutoCommit(true); 
+	            	connection.close(); 
+	            } catch (SQLException e) { e.printStackTrace(); }
+	        }
+	    }
+        return idPartie;
+    }
+
+	//Méthode propre au découpage SQL
+	private Integer creerPartie(Connection connection, Partie partie) throws DAOException{
+        String sqlPartie = "INSERT INTO partie (score_pacmans, score_fantomes, vainqueur) VALUES (?, ?, ?)";
+        int idPartie = -1;
+        try(PreparedStatement psPartie = connection.prepareStatement(sqlPartie, Statement.RETURN_GENERATED_KEYS)){
+        	psPartie.setInt(1, partie.getScorePacmans());
             psPartie.setInt(2, partie.getScoreFantomes());
             psPartie.setString(3, partie.getVainqueur());
             psPartie.executeUpdate();
-
             try (ResultSet clesGenerees = psPartie.getGeneratedKeys()) {
                 if (clesGenerees.next()) {
-                    int idPartie = clesGenerees.getInt(1);
-
-                    try (PreparedStatement psLiaison = connexion.prepareStatement(sqlLiaison)) {
-                        psLiaison.setInt(1, idJoueur);
-                        psLiaison.setInt(2, idPartie);
-                        psLiaison.executeUpdate();
-                    }
-                }
+                    idPartie = clesGenerees.getInt(1);
+                }else throw new SQLException("Échec de la récupération de l'id de la partie");
             }
-        } catch (SQLException e) {
-            throw new DAOException("Erreur lors de l'enregistrement de la partie et de la liaison.", e);
+        }catch(SQLException e) {
+        	throw new DAOException("Erreur lors de la création de la partie.");
         }
+    	return idPartie;
+    }
+    
+	//Méthode propre au découpage SQL
+    private void ajouterJoueurPartie(Connection connection, List<Integer> idJoueurs, Integer idPartie, String role) throws DAOException{
+        String sqlLiaison = "INSERT INTO joue_partie (id_joueur, id_partie, role_joueur) VALUES (?, ?, ?)";
+        try (PreparedStatement psLien = connection.prepareStatement(sqlLiaison)) {
+            for (Integer j : idJoueurs) {
+            	psLien.setInt(1, j);
+            	psLien.setInt(2, idPartie);
+            	psLien.setString(3, role);
+            	psLien.addBatch(); // On ajoute la ligne au "lot" sans l'envoyer de suite
+            }
+            psLien.executeBatch(); // On envoie tout d'un coup à la base
+        }catch(SQLException e) {
+	    	throw new DAOException("Erreur lors de la création de la partie.");
+	    }
     }
 
     @Override

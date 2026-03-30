@@ -45,12 +45,12 @@ public class CosmetiqueDaoSQL implements CosmetiqueDao {
                     if (rs.next()) {
                         cosmetique = new Cosmetique();
                         cosmetique.setId(rs.getInt(ATTR_ID));
-                        cosmetique.setNomCosmetique(ATTR_NOM);
-                        cosmetique.setCouleur(ATTR_COULEUR);
+                        cosmetique.setNomCosmetique(rs.getString(ATTR_NOM));
+                        cosmetique.setCouleur(rs.getString(ATTR_COULEUR));
                     }
                 }
         } catch (SQLException e) { 
-        	throw new DAOException("Erreur lors de la recherche du joueur.", e); 
+        	throw new DAOException("Erreur lors de la recherche du cosmetique.", e); 
         }
         
         return cosmetique;

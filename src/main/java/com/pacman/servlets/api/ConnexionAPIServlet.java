@@ -26,6 +26,7 @@ public class ConnexionAPIServlet extends HttpServlet{
     public static final String ATTR_MDP = "motdepasse";
     public static final String ATTR_RESULTAT = "resultat";
     public static final String ATTR_ERREUR = "erreur";
+    public static final String ATTR_COULEUR= "couleur";
 	
 	private JoueurDao joueurDao;
 	private CosmetiqueDao cosmetiqueDao;
@@ -50,19 +51,20 @@ public class ConnexionAPIServlet extends HttpServlet{
 	    String pseudo = jsonEntree.getString(ATTR_PSEUDO); 
 	    String mdp = jsonEntree.getString(ATTR_MDP);
 	    
-	    ConnexionForm form_connexion = new ConnexionForm(this.joueurDao);
+	    ConnexionForm form_connexion = new ConnexionForm(this.joueurDao, this.cosmetiqueDao);
         Joueur joueur = form_connexion.connecterJoueurAPI(pseudo, mdp);
 
         JSONObject json = null;
 	    if(form_connexion.getErreurs().isEmpty() && (joueur != null)) {
 	    	json = JoueurMapper.toJSON(joueur);
 	    	json.put(ATTR_RESULTAT, true);
+	    	response.setStatus(HttpServletResponse.SC_OK);
 	    }else {
 	    	json = new JSONObject();
 	    	json.put(ATTR_RESULTAT, false);
 	    	json.put(ATTR_ERREUR, new JSONObject(form_connexion.getErreurs()));
+	    	response.setStatus(HttpServletResponse.SC_OK);
 	    }
-	    
 	    response.setContentType("application/json");
 	    response.setCharacterEncoding("UTF-8");
 	    PrintWriter out = response.getWriter();

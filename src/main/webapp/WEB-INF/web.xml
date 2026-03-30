@@ -25,19 +25,9 @@
 	    </init-param>
 	</filter>
 	
-	<filter>
-	    <filter-name>connexionFilter</filter-name>
-	    <filter-class>com.pacman.filter.connexionFilter</filter-class>
-	</filter>
-	
 	<filter-mapping>
 	    <filter-name>Set Character Encoding</filter-name>
 	    <url-pattern>/*</url-pattern>
-	</filter-mapping>
-	
-	<filter-mapping>
-	  <filter-name>connexionFilter</filter-name>
-	  <url-pattern>/*</url-pattern>
 	</filter-mapping>
 	
 </web-app>

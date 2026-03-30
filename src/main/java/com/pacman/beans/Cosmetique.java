@@ -5,7 +5,7 @@ public class Cosmetique {
     private String nomCosmetique;
     private String couleur;
 
-
+ 
     public Integer getId() {
         return id;
     }
@@ -28,5 +28,15 @@ public class Cosmetique {
 
     public void setCouleur(String couleur) {
         this.couleur = couleur;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+    	if (this == o) return true;
+    	if (o == null || getClass() != o.getClass()) return false;
+    	Cosmetique other = (Cosmetique) o;
+    	if (this.id == null || other.getId() == null) return false;
+
+    	return this.id.equals(other.getId());
     }
 }

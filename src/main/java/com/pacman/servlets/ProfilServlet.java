@@ -18,7 +18,9 @@ import com.pacman.metier.*;
 
 @WebServlet("/profil")
 public class ProfilServlet extends HttpServlet {
+	public static final String VERS_CONNEXION = "/connexion";
     public static final String VUE = "/WEB-INF/profil.jsp";
+    public static final String ATTR_JOUEUR_SESSION = "sessionJoueur"; 
     private PartieDao partieDao;
     public void init() throws ServletException {
         DAOFactory mysqlFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
@@ -28,15 +30,15 @@ public class ProfilServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         
-        if (session.getAttribute("sessionJoueur") == null) {
-            response.sendRedirect(request.getContextPath() + "/connexion");
-            return;
+        Joueur joueurConnecte = (Joueur) session.getAttribute(ATTR_JOUEUR_SESSION);
+        if(joueurConnecte == null) {//Au cas où le filter ne fait pas son travail
+        	response.sendRedirect(request.getContextPath() + VERS_CONNEXION);
+        	return;
         }
-        Joueur joueurConnecte = (Joueur) session.getAttribute("sessionJoueur");
         MetierProfil ME = new MetierProfil(this.partieDao);
-        List<Partie> historique = ME.recupererHistorique(joueurConnecte.getId());
-        request.setAttribute("historique", historique);
-
-        this.getServletContext().getRequestDispatcher(VUE).forward(request, response);
+	    List<Partie> historique = ME.recupererHistorique(joueurConnecte.getId());
+	    request.setAttribute("historique", historique);
+	
+	    this.getServletContext().getRequestDispatcher(VUE).forward(request, response);
     }
 }

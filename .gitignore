@@ -2,6 +2,10 @@
 /build/
 /bin/
 *.class
+.settings/
+.classpath
+.project
+.bin/
 
 # Fichiers de log
 *.log

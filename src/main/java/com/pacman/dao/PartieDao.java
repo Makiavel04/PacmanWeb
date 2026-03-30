@@ -1,7 +1,6 @@
 package com.pacman.dao;
 import com.pacman.beans.Partie;
 
-import java.sql.Connection;
 import java.util.List;
 
 public interface PartieDao {

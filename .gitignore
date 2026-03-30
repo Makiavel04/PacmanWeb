@@ -1,2 +1,15 @@
+# Compilation et déploiement
 /build/
-./src/main/java/com/pacman/dao/dao.properties
+/bin/
+*.class
+
+# Fichiers de log
+*.log
+
+# Dossiers temporaires de serveur (si présents)
+/target/
+/.metadata/
+
+# Fichiers spécifiques au système
+.DS_Store
+Thumbs.db

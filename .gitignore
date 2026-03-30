@@ -2,6 +2,10 @@
 /build/
 /bin/
 *.class
+.settings/
+.classpath
+.project
+.bin/
 
 # Fichiers de log
 *.log
@@ -13,3 +17,5 @@
 # Fichiers spécifiques au système
 .DS_Store
 Thumbs.db
+
+./src/main/java/com/pacman/dao/dao.properties

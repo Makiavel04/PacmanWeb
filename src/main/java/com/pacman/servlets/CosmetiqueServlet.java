@@ -26,14 +26,8 @@ public class CosmetiqueServlet extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        
-        if (session.getAttribute("sessionJoueur") == null) {
-            response.sendRedirect(request.getContextPath() + "/connexion");
-            return;
-        }
-
         try {
+        	HttpSession session = request.getSession();
         	Joueur joueurConnecte = (Joueur) session.getAttribute("sessionJoueur");
         	int id = joueurConnecte.getId();           
         	List<Cosmetique> mylistcos = cosmetiqueDao.listerInventaireJoueur(id);

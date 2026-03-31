@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import com.pacman.beans.Cosmetique;
 import com.pacman.beans.Joueur;
 import com.pacman.dao.CosmetiqueDao;
@@ -77,9 +79,9 @@ public class ConnexionForm {
         		Joueur jDao = joueurDao.trouver(joueur.getPseudo());
         		if(jDao == null) this.setErreur(ATTR_PSEUDO, "Joueur non existant");
         		else {
-        			this.traiterMotDePasse(motDePasse, joueur);//Ne teste la conformité du mot de passe que si le joueur existe
+        			this.traiterMotDePasse(motDePasse);//On garde le mot de passe en clair à l'écart du joueur pour éviter qu'un passage du bean n'envoi le mdp en clair n'importe où
         			if(erreurs.isEmpty()) {
-        				this.validationCorrespondance(joueur, jDao);
+        				this.validationCorrespondance(joueur, motDePasse, jDao);
 	            		if(erreurs.isEmpty()) {
 	            			joueur = jDao;
 	            		}
@@ -111,9 +113,8 @@ public class ConnexionForm {
         }
     }
 
-    private void traiterMotDePasse(String mdp, Joueur joueur) {
+    private void traiterMotDePasse(String mdp) {
     	this.validationMotsDePasse(mdp);
-    	joueur.setMotDePasse(mdp);
     }
     
     /**
@@ -136,17 +137,17 @@ public class ConnexionForm {
         erreurs.put( champ, message );
     }
     
-    public void validationCorrespondance(Joueur jForm, Joueur jDAO) {
+    public void validationCorrespondance(Joueur jForm, String mdpForm, Joueur jDAO) {
     	if(jForm == null) {
     		this.setErreur(ATTR_PSEUDO, "Non renseigné");
     		this.setErreur(ATTR_MDP, "Non renseigné");
     	}else {
 	    	if(jDAO == null) {
-	    		this.setErreur(ATTR_DAO, "Joueur inexistant");
+	    		this.setErreur(ATTR_DAO, "Joueur inexistant"); //pour eviter les soucis de Hacker qui utilisent ces infos pour savoir quoi cibler, on peut brouiller les pistes dans un attribut identifiant qui ne donne pas de détails.
 	    	}else if(!jForm.getPseudo().equals(jDAO.getPseudo())) {
-    			this.setErreur(ATTR_PSEUDO, "Pseudo incorrecte");
-    		}else if(!jForm.getMotDePasse().equals(jDAO.getMotDePasse())){
-    			this.setErreur(ATTR_MDP, "Mot de passe incorrecte");
+    			this.setErreur(ATTR_PSEUDO, "Pseudo incorrecte");//pour eviter les soucis de Hacker qui utilisent ces infos pour savoir quoi cibler, on peut brouiller les pistes dans un attribut identifiant qui ne donne pas de détails.
+    		}else if(!BCrypt.checkpw(mdpForm ,jDAO.getMotDePasse())){//jForm.getMotDePasse().equals(jDAO.getMotDePasse())
+    			this.setErreur(ATTR_MDP, "Mot de passe incorrecte");//pour eviter les soucis de Hacker qui utilisent ces infos pour savoir quoi cibler, on peut brouiller les pistes dans un attribut identifiant qui ne donne pas de détails.
     		}
     	}
     	

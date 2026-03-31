@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.mindrot.jbcrypt.BCrypt;
 
 import com.pacman.beans.Joueur;
 import com.pacman.dao.DAOException;
@@ -41,18 +42,21 @@ public class InscriptionForm {
         Joueur joueur = new Joueur();
         try {
             traiterPseudo( pseudo, joueur);
-            traiterMotsDePasse( motDePasse, confirmation, joueur );
 
             if ( erreurs.isEmpty() ) {
             	if(joueurDao.trouver(pseudo) != null) this.setErreur(ATTR_PSEUDO,"Pseudo déjà utilisé");//S'il y a qqun avec ce pseudo on s'arrête
             	else{
-            		joueurDao.creer( joueur );
+            		traiterMotsDePasse( motDePasse, confirmation, joueur ); //Traite le mot de passe après avoir vérifié si pas déjà ce pseudo en base
+            		if(erreurs.isEmpty()) {
+            			joueurDao.creer( joueur );
+            		}
             	}
             }
             resultat = this.erreurs.isEmpty() ? "Succès de l'inscription." : "Échec de l'inscription.";
         } catch ( DAOException e ) {
             resultat = "Échec de l'inscription : une erreur imprévue est survenue, merci de réessayer dans quelques instants.";
             this.setErreur(ATTR_DAO, "Erreur sur le serveur, veuillez réessayer dans quelques instants.");
+            System.err.println("Erreur à l'inscription :" + e.getMessage());
         } 
 
 
@@ -84,22 +88,10 @@ public class InscriptionForm {
 
     private void traiterMotsDePasse( String motDePasse, String confirmation, Joueur joueur ) {
 	    validationMotsDePasse( motDePasse, confirmation );
-	    	
-	    /*
-	     * Utilisation de la bibliothèque Jasypt pour chiffrer le mot de passe
-	     * efficacement.
-	     * 
-	     * L'algorithme SHA-256 est ici utilisé, avec par défaut un salage
-	     * aléatoire et un grand nombre d'itérations de la fonction de hashage.
-	     * 
-	     * La String retournée est de longueur 56 et contient le hash en Base64.
-	     */
-//	    ConfigurablePasswordEncryptor passwordEncryptor = new ConfigurablePasswordEncryptor();
-//	    passwordEncryptor.setAlgorithm( ALGO_CHIFFREMENT );
-//	    passwordEncryptor.setPlainDigest( false );
-//	    String motDePasseChiffre = passwordEncryptor.encryptPassword( motDePasse );
-	
-	    joueur.setMotDePasse( motDePasse );
+	    if(erreurs.isEmpty()) { //Si déjà une erreur, on hash pas
+	    	String hash = BCrypt.hashpw(motDePasse, BCrypt.gensalt());
+	    	joueur.setMotDePasse(hash);
+	    }//else joueur.setMotDePasse("");
 	}
     
     /*

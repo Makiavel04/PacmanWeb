@@ -16,6 +16,9 @@ public class DAOFactorySQL extends DAOFactory {
     private static final String PROPERTY_DRIVER          = "driver";
     private static final String PROPERTY_NOM_UTILISATEUR = "nomutilisateur";
     private static final String PROPERTY_MOT_DE_PASSE    = "motdepasse";
+    private static final String ENV_URL             = "DB_URL";
+    private static final String ENV_UTILISATEUR = "DB_USERNAME";
+    private static final String ENV_MOT_DE_PASSE    = "DB_PASSWORD";
     private String url;
     private String username;
     private String password;
@@ -33,20 +36,27 @@ public class DAOFactorySQL extends DAOFactory {
             String driver;
             String username;
             String password;
-
+            
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-            InputStream fichierProperties = classLoader.getResourceAsStream( FICHIER_PROPERTIES );
-
-            if ( fichierProperties == null ) {
-                throw new DAOConfigurationException( "Le fichier properties " + FICHIER_PROPERTIES + " est introuvable." );
-            }
-
-            try {
+            try (InputStream fichierProperties = classLoader.getResourceAsStream( FICHIER_PROPERTIES );){
+            	if ( fichierProperties == null ) {
+	                throw new DAOConfigurationException( "Le fichier properties " + FICHIER_PROPERTIES + " est introuvable." );
+	            }
                 properties.load( fichierProperties );
-                url = properties.getProperty( PROPERTY_URL );
+                
+                if(System.getenv(ENV_URL) !=null && System.getenv(ENV_UTILISATEUR)!=null && System.getenv(ENV_MOT_DE_PASSE)!=null) {//Si on les variables d'environnement on les utilise pour la db, l'username et le mot de passe
+                	url = System.getenv(ENV_URL);
+                	username = System.getenv(ENV_UTILISATEUR);
+                	password = System.getenv(ENV_MOT_DE_PASSE);
+                }
+                else {
+                	url = properties.getProperty( PROPERTY_URL );
+                	username = properties.getProperty( PROPERTY_NOM_UTILISATEUR );
+                	password = properties.getProperty( PROPERTY_MOT_DE_PASSE );
+                }
+                
+                
                 driver = properties.getProperty( PROPERTY_DRIVER );
-                username = properties.getProperty( PROPERTY_NOM_UTILISATEUR );
-                password = properties.getProperty( PROPERTY_MOT_DE_PASSE );
             } catch ( IOException e ) {
                 throw new DAOConfigurationException( "Impossible de charger le fichier properties " + FICHIER_PROPERTIES, e );
             }
@@ -57,7 +67,7 @@ public class DAOFactorySQL extends DAOFactory {
                 throw new DAOConfigurationException( "Le driver est introuvable dans le classpath.", e );
             }
 
-            DAOFactory instance = new DAOFactorySQL( url, username, password );
+            //DAOFactory instance = new DAOFactorySQL( url, username, password );
 
     		dao = new DAOFactorySQL(url, username, password);
     	}

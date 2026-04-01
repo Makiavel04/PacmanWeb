@@ -4,23 +4,7 @@
 <html>
 <head>
     <title>Pac-Man : Dashboard</title>
-    <style>
-        body { background-color: #111; color: #fff; font-family: 'Courier New', Courier, monospace; text-align: center; margin: 30px; }
-        .header { display: flex; justify-content: space-between; align-items: center; background: #222; padding: 20px; border: 2px solid #FFD700; border-radius: 8px; margin-bottom: 30px;}
-        .stats { text-align: left; }
-        .stats h2 { margin: 5px 0; color: #FFD700; }
-        .stats p { margin: 5px 0; font-size: 18px; }
-        .btn-logout { background: #FF5555; color: #fff; padding: 10px 15px; text-decoration: none; border-radius: 5px; font-weight: bold; border: 2px solid #CC0000;}
-        .btn-logout:hover { background: #CC0000; }
-        
-        table { width: 80%; margin: 0 auto; border-collapse: collapse; background: #222; border: 2px solid #FFD700; box-shadow: 0 0 10px #FFD700;}
-        th { background: #FFD700; color: #000; padding: 15px; font-size: 18px; text-transform: uppercase;}
-        td { padding: 12px; border-bottom: 1px solid #444; font-size: 16px;}
-        tr:hover { background: #333; }
-        .rank-1 { color: #FFD700; font-weight: bold; font-size: 20px;}
-        .rank-2 { color: #C0C0C0; font-weight: bold; }
-        .rank-3 { color: #CD7F32; font-weight: bold; }
-    </style>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/style.css">
 </head>
 <body>
 
@@ -32,7 +16,7 @@
         </div>
         <div>
             <a href="deconnexion" class="btn-logout">Déconnexion</a>
-            <a href="cosmetique" class="btn-logout" style="background: #00FFFF; color: #000; border-color: #00CCCC; margin-right: 10px;">Boutique & Inventaire</a>
+            <a href="cosmetique" class="btn-logout">Boutique & Inventaire</a>
         </div>
     </div>
 
@@ -58,7 +42,7 @@
                     # ${status.count}
                 </td>
                 
-                <td style="font-weight: bold; color: #00FF00;">${joueur.pseudo}</td>
+                <td>${joueur.pseudo}</td>
                 <td>${joueur.scorePacman}</td>
                 <td>${joueur.scoreFantome}</td>
             </tr>

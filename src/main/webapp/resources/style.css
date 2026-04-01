@@ -1,0 +1,108 @@
+/* --- VARIABLES GLOBALES --- */
+:root {
+    --bg-color: #111;
+    --card-bg: #222;
+    --text-white: #fff;
+    --pacman-yellow: #FFD700;
+    --ghost-red: #FF5555;
+    --ghost-red-dark: #CC0000;
+    --ghost-cyan: #00FFFF;
+    --ghost-green: #00FF00;
+    --ghost-green-dark: #00CC00;
+    --border-dark: #444;
+}
+
+/* --- BASE --- */
+body { 
+    background-color: var(--bg-color); 
+    color: var(--text-white); 
+    font-family: 'Courier New', Courier, monospace; 
+    text-align: center; 
+    margin: 30px;
+}
+
+h1 { text-shadow: 2px 2px #000; margin-bottom: 20px; }
+h2 { color: var(--pacman-yellow); border-bottom: 2px dashed var(--border-dark); padding-bottom: 10px; display: inline-block; }
+a { text-decoration: none; transition: 0.2s; }
+
+/* --- LAYOUT & BOXES --- */
+.header { 
+    display: flex; justify-content: space-between; align-items: center; 
+    background: var(--card-bg); padding: 20px; border: 2px solid var(--pacman-yellow); 
+    border-radius: 8px; margin-bottom: 30px;
+}
+
+.box { 
+    border: 3px solid var(--pacman-yellow); padding: 30px; border-radius: 10px; 
+    width: 320px; margin: 50px auto; background-color: var(--card-bg); 
+    box-shadow: 0 0 15px var(--pacman-yellow);
+}
+
+.box-inscription { border-color: var(--ghost-green); box-shadow: 0 0 15px var(--ghost-green); }
+.box-inscription h1 { color: var(--ghost-green); }
+
+/* --- FORMULAIRES --- */
+input[type="text"], input[type="password"] { 
+    margin: 10px 0; padding: 10px; width: 90%; border: 2px solid #555; 
+    border-radius: 5px; background: #000; color: #fff; font-family: 'Courier New';
+}
+
+input[type="submit"], .btn-action { 
+    font-weight: bold; cursor: pointer; padding: 10px; width: 95%; 
+    border: none; border-radius: 5px; margin-top: 15px; font-size: 16px; 
+    text-transform: uppercase; font-family: 'Courier New';
+}
+
+.btn-yellow { background: var(--pacman-yellow); color: #000; }
+.btn-yellow:hover { background: #FFC107; transform: scale(1.02); }
+
+.btn-green { background: var(--ghost-green); color: #000; }
+.btn-green:hover { background: var(--ghost-green-dark); transform: scale(1.02); }
+
+/* --- BOUTONS SPECIFIQUES --- */
+.btn-logout { 
+    background: var(--ghost-red); color: #fff; padding: 10px 15px; 
+    border-radius: 5px; font-weight: bold; border: 2px solid var(--ghost-red-dark);
+}
+.btn-logout:hover { background: var(--ghost-red-dark); }
+
+.btn-shop { 
+    background: var(--ghost-cyan); color: #000; padding: 10px 15px; 
+    border-radius: 5px; font-weight: bold; border: 2px solid #00CCCC; margin-right: 10px;
+}
+
+.btn-retour { 
+    background: #555; color: #fff; padding: 10px 15px; 
+    border-radius: 5px; font-weight: bold; border: 2px solid #888;
+}
+
+/* --- TABLEAU LEADERBOARD --- */
+table { 
+    width: 80%; margin: 0 auto; border-collapse: collapse; 
+    background: var(--card-bg); border: 2px solid var(--pacman-yellow); 
+    box-shadow: 0 0 10px var(--pacman-yellow);
+}
+th { background: var(--pacman-yellow); color: #000; padding: 15px; text-transform: uppercase; }
+td { padding: 12px; border-bottom: 1px solid var(--border-dark); }
+tr:hover { background: #333; }
+
+.rank-1 { color: var(--pacman-yellow); font-weight: bold; font-size: 20px; }
+.rank-2 { color: #C0C0C0; font-weight: bold; }
+.rank-3 { color: #CD7F32; font-weight: bold; }
+.pseudo-highlight { color: var(--ghost-green); font-weight: bold; }
+
+/* --- GRILLE COSMETIQUES --- */
+.grid-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-bottom: 50px; }
+.card { 
+    background: var(--card-bg); border: 2px solid var(--border-dark); 
+    border-radius: 10px; padding: 20px; width: 200px; transition: transform 0.2s;
+}
+.card:hover { transform: scale(1.05); border-color: var(--ghost-cyan); }
+.color-swatch { 
+    width: 60px; height: 60px; border-radius: 50%; border: 3px solid #fff; 
+    margin: 0 auto 15px auto; box-shadow: 0 0 10px rgba(255,255,255,0.2);
+}
+
+/* --- MESSAGES --- */
+.erreur { color: var(--ghost-red); font-weight: bold; font-size: 14px; margin-bottom: 10px; }
+.empty-msg { color: #888; font-style: italic; }

@@ -35,8 +35,7 @@ public class connexionFilter implements Filter {
 
         String uri = request.getRequestURI();
         HttpSession session = request.getSession();
-        
-        if (session.getAttribute(ATTR_JOUEUR_SESSION) == null && !uri.contains("/connexion")  && !uri.contains("/inscription")) 
+        if (session.getAttribute(ATTR_JOUEUR_SESSION) == null && !uri.contains("/connexion")  && !uri.contains("/inscription") && !uri.contains("/resources/") )
             response.sendRedirect(request.getContextPath() + ACCES_PUBLIC);
         else 
         	chain.doFilter( request, response );

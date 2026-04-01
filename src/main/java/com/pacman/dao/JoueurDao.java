@@ -4,7 +4,7 @@ import java.util.List;
 import com.pacman.beans.Joueur;
 
 public interface JoueurDao {
-    void creer(Joueur joueur) throws DAOException;
+    Joueur creer(Joueur joueur) throws DAOException;
     Joueur trouver(String pseudo) throws DAOException;
     List<Joueur> listerMeilleursScores() throws DAOException;
     

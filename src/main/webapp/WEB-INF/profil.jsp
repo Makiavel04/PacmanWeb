@@ -4,19 +4,8 @@
 <html>
 <head>
     <title>Pac-Man : Mon Profil</title>
-    <style>
-        body { background-color: #111; color: #fff; font-family: 'Courier New', Courier, monospace; text-align: center; margin: 30px; }
-        .box-profil { background: #222; border: 2px solid #FFD700; border-radius: 10px; padding: 20px; width: 60%; margin: 0 auto 30px auto; text-align: left; box-shadow: 0 0 15px #FFD700;}
-        h1 { color: #FFD700; }
-        .btn-retour { background: #555; color: #fff; padding: 10px 15px; text-decoration: none; border-radius: 5px; font-weight: bold; border: 2px solid #888; display: inline-block; margin-bottom: 20px;}
-        .btn-retour:hover { background: #777; }
-        
-        table { width: 80%; margin: 0 auto; border-collapse: collapse; background: #222; border: 1px solid #555;}
-        th { background: #444; color: #fff; padding: 10px;}
-        td { padding: 10px; border-bottom: 1px solid #333;}
-        .victoire { color: #00FF00; font-weight: bold; }
-        .defaite { color: #FF5555; font-weight: bold; }
-    </style>
+    <link rel="stylesheet" type="text/css" href="<c:url value='/css/main_theme.css' />">
+    <link rel="stylesheet" type="text/css" href="<c:url value='/css/profil.css' />">
 </head>
 <body>
 

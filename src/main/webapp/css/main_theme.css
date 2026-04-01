@@ -1,0 +1,40 @@
+/* Définition du thème principale du site */
+ /*Éléments HTML*/
+ body {
+ 	background-color: #111; 
+ 	color: #fff; 
+ 	font-family: 'Courier New', Courier, monospace; 
+ 	text-align: center; 
+ 	margin: 30px; 
+ }
+ 
+ h1 { color: #FFD700; }
+ 
+ 
+ /*Classes*/
+.btn-retour { 
+	background: #555; 
+	color: #fff; 
+	padding: 10px 15px; 
+	text-decoration: none; 
+	border-radius: 5px; 
+	font-weight: bold; 
+	border: 2px solid #888; 
+	display: inline-block; 
+	margin-bottom: 20px;
+
+}
+.btn-retour:hover { 
+	background: #777; 
+}
+
+.box-profil { 
+	background: #222; 
+	border: 2px solid #FFD700; 
+	border-radius: 10px; 
+	padding: 20px; 
+	width: 60%; 
+	margin: 0 auto 30px auto; 
+	text-align: left; 
+	box-shadow: 0 0 15px #FFD700;
+}

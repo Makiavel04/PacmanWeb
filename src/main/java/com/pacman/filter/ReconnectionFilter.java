@@ -18,7 +18,6 @@ import javax.servlet.http.HttpSession;
 public class ReconnectionFilter implements Filter{
     public static final String ACCES_CONNEXION     = "/connexion";
     public static final String ACCES_INSCRIPTION     = "/inscription";
-    public static final String ACCES_API = "/api";
     public static final String ACCES_MENU     = "/menu";
 	public static final String ATTR_JOUEUR_SESSION = "sessionJoueur";
 	
@@ -31,12 +30,6 @@ public class ReconnectionFilter implements Filter{
 
 		HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
-        String chemin = request.getRequestURI().substring( request.getContextPath().length() );
-        if(chemin.startsWith(ACCES_API)) {//Ne bloque pas les requêtes api
-        	chain.doFilter(request, response);
-        	return;
-        }
-
         HttpSession session = request.getSession();
         boolean estConnecte = session.getAttribute(ATTR_JOUEUR_SESSION)!=null;
         if(!estConnecte) {

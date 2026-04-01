@@ -21,8 +21,9 @@ public class GuestFilter implements Filter {
     public static final String ACCES_MENU     = "/menu";
     public static final String ACCES_CONNEXION     = "/connexion";
     public static final String ACCES_INSCRIPTION     = "/inscription";
-    public static final String ACCES_API = "/api";
 	public static final String ATTR_JOUEUR_SESSION = "sessionJoueur";
+    public static final String ACCES_API = "/api";
+    public static final String ACCES_CSS = "/css";
 
 	@Override
 	public void destroy() {
@@ -38,7 +39,7 @@ public class GuestFilter implements Filter {
 
         String chemin = request.getRequestURI().substring( request.getContextPath().length() );
         
-        if(chemin.startsWith(ACCES_API)) {//Ne bloque pas les requêtes api
+        if(chemin.startsWith(ACCES_API) || chemin.startsWith(ACCES_CSS)) {//Ne bloque pas les requêtes api
         	chain.doFilter(request, response);
         	return;
         }

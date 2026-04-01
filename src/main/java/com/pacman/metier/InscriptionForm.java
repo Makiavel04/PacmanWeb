@@ -48,7 +48,7 @@ public class InscriptionForm {
             	else{
             		traiterMotsDePasse( motDePasse, confirmation, joueur ); //Traite le mot de passe après avoir vérifié si pas déjà ce pseudo en base
             		if(erreurs.isEmpty()) {
-            			joueurDao.creer( joueur );
+            			joueur = joueurDao.creer( joueur );
             		}
             	}
             }

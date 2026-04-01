@@ -17,7 +17,7 @@ public class JoueurDaoSQL implements JoueurDao {
     }
 
     @Override
-    public void creer(Joueur joueur) throws DAOException {
+    public Joueur creer(Joueur joueur) throws DAOException {
     	int id_gen = -1;
     	Connection connexion = null;
     	try{
@@ -47,6 +47,7 @@ public class JoueurDaoSQL implements JoueurDao {
 	        } else {
 	            throw new SQLException("Impossible de récupérer l'ID généré.");
 	        }
+		    return this.trouver(joueur.getPseudo());
     	} catch (SQLException e) { 
     		if (connexion != null) { //Si erreur annule tout
                 try { connexion.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }

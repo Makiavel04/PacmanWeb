@@ -1,0 +1,40 @@
+/*Éléments de la page de profil*/
+.box-profil {
+	background: #222;
+	border: 2px solid #FFD700;
+	border-radius: 10px;
+	padding: 20px;
+	width: 60%;
+	margin: 0 auto 30px auto;
+	text-align: left;
+	box-shadow: 0 0 15px #FFD700;
+}
+
+table {
+	width: 80%;
+	margin: 0 auto;
+	border-collapse: collapse;
+	background: #222;
+	border: 1px solid #555;
+}
+
+th {
+	background: #444;
+	color: #fff;
+	padding: 10px;
+}
+
+td {
+	padding: 10px;
+	border-bottom: 1px solid #333;
+}
+
+.victoire {
+	color: #00FF00;
+	font-weight: bold;
+}
+
+.defaite {
+	color: #FF5555;
+	font-weight: bold;
+}

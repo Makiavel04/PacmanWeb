@@ -14,12 +14,12 @@ import com.pacman.dao.JoueurDao;
 
 @WebServlet("/menu")
 public class MenuServlet extends HttpServlet {
+	private static final String CONFIG_DAO_FACTORY = "daofactory";
     public static final String VUE = "/WEB-INF/menu.jsp";
     private JoueurDao joueurDao;
 
     public void init() throws ServletException {
-        DAOFactory mysqlFactory = DAOFactory.getDAOFactory(DAOFactory.MYSQL);
-        this.joueurDao = mysqlFactory.getJoueurDao();
+        this.joueurDao = ( (DAOFactory) getServletContext().getAttribute( CONFIG_DAO_FACTORY ) ).getJoueurDao();
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

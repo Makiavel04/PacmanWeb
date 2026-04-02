@@ -90,7 +90,7 @@ public class JoueurDaoSQL implements JoueurDao {
     @Override
     public List<Joueur> listerMeilleursScores() throws DAOException {
         List<Joueur> joueurs = new ArrayList<>();
-        String sql = "SELECT * FROM joueur ORDER BY score_pacman DESC LIMIT 10";
+        String sql = "SELECT * FROM joueur ORDER BY (score_pacman + score_fantome) DESC LIMIT 10";
         try (Connection connexion = daoFactory.getConnection();
              PreparedStatement ps = connexion.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
